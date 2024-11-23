@@ -25,9 +25,9 @@ Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/register', [UserController::class, 'register']);
 Route::get('/users/{id}', [UserController::class, 'getUser']);
 Route::get('/users', [UserController::class, 'getAllUser']);
-
-
+Route::put('/users/update/{id}', [UserController::class, 'updateUser']);
 Route::delete('/users/delete/{id}', [UserController::class, 'deleteUser']);
+Route::patch('/users/changepassword/{id}', [UserController::class, 'changePassword']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

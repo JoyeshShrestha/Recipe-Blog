@@ -250,6 +250,162 @@ public function getAllUser()
     ], 200);
 }
 
+/**
+ * @OA\Put(
+ *     path="/api/users/update/{id}",
+ *     tags={"User Management"},
+ *     summary="Update a specific user",
+ *     description="Update a specific user's details by ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID of the user to update",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="name", type="string", example="Superadmin"),
+ *             @OA\Property(property="email", type="string", example="superadmin@gmail.com"),
+ *             @OA\Property(property="password", type="string", example="securepassword"),
+ *             @OA\Property(property="role_id", type="integer", example=2)
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="User updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="id", type="integer", example=1),
+ *             @OA\Property(property="name", type="string", example="Superadmin"),
+ *             @OA\Property(property="email", type="string", example="superadmin@gmail.com"),
+ *             @OA\Property(property="created_at", type="string", example="2024-11-22T07:46:58.000000Z"),
+ *             @OA\Property(property="updated_at", type="string", example="2024-11-23T07:46:58.000000Z")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="error", type="string", example="No user with that ID found")
+ *         )
+ *     )
+ * )
+ */
+public function updateUser(Request $request, $id)
+{
+    // Fetch the user by ID
+    $user = User::find($id);
 
+    // If the user is not found, return a 404 response
+    if (!$user) {
+        return response()->json([
+            'error' => 'No user with that ID found'
+        ], 404);
+    }
+
+    // Validate the incoming request
+    $incomingFields = $request->validate([
+        'name' => ['required', 'min:3', 'max:20', Rule::unique('users', 'name')->ignore($user->id)],
+        'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
+        'password' => ['nullable', 'min:6', 'max:20'],
+        'role_id' => ['required', 'exists:roles,id'],
+    ]);
+
+    // Update the user details
+    $user->name = $incomingFields['name'];
+    $user->email = $incomingFields['email'];
+    if (isset($incomingFields['password'])) {
+        $user->password = bcrypt($incomingFields['password']);
+    }
+    $user->role_id = $incomingFields['role_id'];
+    $user->save();
+
+    // Return a success response with the updated user's details
+    return response()->json($user, 200);
+}
+
+
+
+/**
+ * @OA\Patch(
+ *     path="/api/users/changepassword/{id}",
+ *     tags={"User Management"},
+ *     summary="Change password of a specific user",
+ *     description="Update a specific user's password by ID",
+ *     @OA\Parameter(
+ *         name="id",
+ *         in="path",
+ *         description="ID of the user to update",
+ *         required=true,
+ *         @OA\Schema(type="integer", example=1)
+ *     ),
+ *     @OA\RequestBody(
+ *         required=true,
+ *         @OA\JsonContent(
+ *             type="object",
+ *            
+ *             @OA\Property(property="password", type="string", example="securepassword"),
+ *          
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=200,
+ *         description="Password updated successfully",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="id", type="integer", example=1),
+ *             @OA\Property(property="name", type="string", example="Superadmin"),
+ *             @OA\Property(property="email", type="string", example="superadmin@gmail.com"),
+ *             @OA\Property(property="created_at", type="string", example="2024-11-22T07:46:58.000000Z"),
+ *             @OA\Property(property="updated_at", type="string", example="2024-11-23T07:46:58.000000Z")
+ *         )
+ *     ),
+ *     @OA\Response(
+ *         response=404,
+ *         description="User not found",
+ *         @OA\JsonContent(
+ *             type="object",
+ *             @OA\Property(property="error", type="string", example="No user with that ID found")
+ *         )
+ *     )
+ * )
+ */
+public function changePassword(Request $request, $id)
+{
+    // Fetch the user by ID
+    $user = User::find($id);
+
+    // If the user is not found, return a 404 response
+    if (!$user) {
+        return response()->json([
+            'error' => 'No user with that ID found'
+        ], 404);
+    }
+
+    // Validate the incoming request
+    $incomingFields = $request->validate([
+        
+        'password' => ['required', 'min:6', 'max:20'],
+      
+    ]);
+
+    // Update the user details
+    
+    if (isset($incomingFields['password'])) {
+        $user->password = bcrypt($incomingFields['password']);
+    }
+   
+    $user->update($incomingFields);
+
+    // Return a success response with the updated user's details
+    return response()->json([
+        
+        'message' =>'Password Changed Successfully',
+        'user' =>$user], 200);
+}
 
 }
