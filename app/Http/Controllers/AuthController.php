@@ -51,7 +51,7 @@ public function login(Request $request)
 
     // Attempt to authenticate the user
     if (auth()->attempt(['email' => $incomingFields['email'], 'password' => $incomingFields['password']])) {
-        // Generate a token (use Passport or a similar package)
+        
         $user = auth()->user();
         $user_info = $user;
         $token = $user->createToken($user['id'])->accessToken;
@@ -61,7 +61,7 @@ public function login(Request $request)
             'message' => 'User logged in successfully',
             'user_id' => $user->id,
             'user_info'=> $user,
-            'token' => $token,  // Provide the token to the client
+            'token' => $token, 
         ], 200);
     }
 
@@ -101,7 +101,7 @@ public function logout(Request $request)
     // Logout from the session
     Auth::logout();
 
-    // Invalidate the session and regenerate CSRF token
+    
     $request->session()->invalidate();
     $request->session()->regenerateToken();
 

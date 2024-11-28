@@ -11,7 +11,7 @@ use Illuminate\Validation\Rule;
 
 /**
  * @OA\Info(
- *      title="Laravel ourfirstapp",
+ *      title="Laravel mithofoods",
  *      version="1.0.0"    
  * )
  */
