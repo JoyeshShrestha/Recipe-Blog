@@ -126,6 +126,475 @@
                 }
             }
         },
+        "/api/recipe/add": {
+            "post": {
+                "tags": [
+                    "Recipe Management"
+                ],
+                "summary": "Add a new Recipe",
+                "description": "This is the Add Recipe API",
+                "operationId": "7f8e9815ff17196da09a79a0511d3d19",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "recipe_name",
+                                    "description",
+                                    "subtitle",
+                                    "image"
+                                ],
+                                "properties": {
+                                    "recipe_name": {
+                                        "type": "string",
+                                        "example": "Jhol Momo Recipe"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Ingredients:\n\n*For Momos:\n\n*    2 cups all-purpose flour\n*    1/2 cup water (for kneading)\n*    1 cup minced chicken/vegetable filling\n*    1/4 tsp salt\n*    1 tbsp oil\n\n*For Jhol (Soup):\n\n*    3 medium tomatoes, boiled and peeled\n*    2 dried red chilies (adjust spice level)\n*    1 tsp sesame seeds, roasted\n*    1 tsp cumin seeds, roasted\n*    2 garlic cloves\n*    1-inch piece ginger\n*    1 tbsp mustard oil\n*    2 cups warm water\n*    Salt to taste\n\n*Instructions:\n\n*1. Momos:\n\n*    Knead flour, water, and salt into a soft dough; rest for 20 minutes.\n*    Roll dough thin, cut small circles, fill with your choice of filling, and shape into momos.\n*    Steam for 10–12 minutes until cooked.\n*\n*2. Jhol:\n*\n*    Blend tomatoes, chilies, sesame seeds, cumin, garlic, and ginger into a smooth paste.\n*    Heat mustard oil, add the paste, and sauté for 2 minutes.\n*    Add warm water and salt, simmer for 5 minutes.\n*\n*3. Assemble:\n*\n*    Place momos in a bowl and pour jhol over them.\n*    Garnish with chopped cilantro and serve hot."
+                                    },
+                                    "subtitle": {
+                                        "type": "string",
+                                        "example": "Jhol momo for excellent weather condition"
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "example": "https://enq69sdfnv7.exactdn.com/wp-content/uploads/2024/02/JHOL-MOMO-SOUP-RECIPE-3-1.png?strip=all&lossy=1&ssl=1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Recipe added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Recipe Added successfully"
+                                        },
+                                        "recipe_id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Validation failed"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/recipe": {
+            "get": {
+                "tags": [
+                    "Recipe Management"
+                ],
+                "summary": "Get all Recipe",
+                "description": "Fetch all recipe details.",
+                "operationId": "5506be94bc7bcb99de00e58df6110202",
+                "responses": {
+                    "200": {
+                        "description": "All recipes fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer",
+                                                "example": 1
+                                            },
+                                            "recipe_name": {
+                                                "type": "string",
+                                                "example": "Chocolate Cake"
+                                            },
+                                            "description": {
+                                                "type": "string",
+                                                "example": "A delicious chocolate cake recipe."
+                                            },
+                                            "subtitle": {
+                                                "type": "string",
+                                                "example": "Easy to prepare and tasty."
+                                            },
+                                            "created_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-11-22T07:46:58.000000Z"
+                                            },
+                                            "updated_at": {
+                                                "type": "string",
+                                                "format": "date-time",
+                                                "example": "2024-11-22T07:46:58.000000Z"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No recipes found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No recipes found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/recipe/{id}": {
+            "get": {
+                "tags": [
+                    "Recipe Management"
+                ],
+                "summary": "Get a recipe by ID",
+                "description": "Fetch a recipe's details by its unique ID.",
+                "operationId": "c0bfd6d15a0f76d6ff25918c7bc98ada",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the recipe to fetch",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recipe fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "recipe": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "recipe_name": {
+                                                    "type": "string",
+                                                    "example": "Chocolate Cake"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "A delicious chocolate cake recipe."
+                                                },
+                                                "subtitle": {
+                                                    "type": "string",
+                                                    "example": "Easy to prepare and tasty."
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-11-22T07:46:58.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-11-22T07:46:58.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Recipe not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Recipe not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/recipe/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Recipe Management"
+                ],
+                "summary": "Delete a Recipe",
+                "description": "Delete a recipe by their ID",
+                "operationId": "393be54e0f7396bdcf2a3ee8a090734b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Recipe to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Recipe deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Recipe deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Recipe not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Recipe not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/recipe/update/{id}": {
+            "put": {
+                "tags": [
+                    "Recipe Management"
+                ],
+                "summary": "Update a specific recipe",
+                "description": "Update a specific recipe's details by its unique ID.",
+                "operationId": "44b9f765a9704739da3c5834b2ff6732",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the recipe to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "recipe_name": {
+                                        "type": "string",
+                                        "example": "Chocolate Cake"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "A delicious chocolate cake recipe."
+                                    },
+                                    "subtitle": {
+                                        "type": "string",
+                                        "example": "Easy to prepare and tasty."
+                                    },
+                                    "image": {
+                                        "type": "string",
+                                        "example": "https://example.com/image.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Recipe updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "recipe_name": {
+                                            "type": "string",
+                                            "example": "Updated Chocolate Cake"
+                                        },
+                                        "description": {
+                                            "type": "string",
+                                            "example": "A new description for the updated recipe."
+                                        },
+                                        "subtitle": {
+                                            "type": "string",
+                                            "example": "Even tastier now!"
+                                        },
+                                        "image": {
+                                            "type": "string",
+                                            "example": "https://example.com/new-image.jpg"
+                                        },
+                                        "created_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-11-22T07:46:58.000000Z"
+                                        },
+                                        "updated_at": {
+                                            "type": "string",
+                                            "format": "date-time",
+                                            "example": "2024-11-23T07:46:58.000000Z"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Recipe not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No recipe with that ID found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/latestrecipe": {
+            "get": {
+                "tags": [
+                    "Recipe Management"
+                ],
+                "summary": "Get the latest recipe",
+                "description": "Fetch the most recent recipe added to the system.",
+                "operationId": "60c9abc2eec005db79a266ef517e84dc",
+                "responses": {
+                    "200": {
+                        "description": "Latest recipe fetched successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "recipe": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "integer",
+                                                    "example": 1
+                                                },
+                                                "recipe_name": {
+                                                    "type": "string",
+                                                    "example": "Chocolate Cake"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "A delicious chocolate cake recipe."
+                                                },
+                                                "subtitle": {
+                                                    "type": "string",
+                                                    "example": "Easy to prepare and tasty."
+                                                },
+                                                "created_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-11-22T07:46:58.000000Z"
+                                                },
+                                                "updated_at": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2024-11-22T07:46:58.000000Z"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No recipes found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "No recipes found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
@@ -596,6 +1065,10 @@
         {
             "name": "Authentication",
             "description": "Authentication"
+        },
+        {
+            "name": "Recipe Management",
+            "description": "Recipe Management"
         },
         {
             "name": "User Management",

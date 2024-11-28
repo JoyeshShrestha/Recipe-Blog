@@ -98,18 +98,14 @@ public function login(Request $request)
  */
 public function logout(Request $request)
 {
-    // Invalidate the user's token
-    auth()->logout();
+    // Logout from the session
+    Auth::logout();
 
-    // Invalidate the session
+    // Invalidate the session and regenerate CSRF token
     $request->session()->invalidate();
-
-    // Regenerate the CSRF token
     $request->session()->regenerateToken();
 
-    return response()->json([
-        'message' => 'User logged out successfully'
-    ], 200);
+    return response()->json(['message' => 'Logout successful'], 200);
 }
 
 

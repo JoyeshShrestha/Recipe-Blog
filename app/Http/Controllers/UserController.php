@@ -308,7 +308,7 @@ public function updateUser(Request $request, $id)
     }
 
     // Validate the incoming request
-    $incomingFields = $request->validate([
+    $validatedData = $request->validate([
         'name' => ['required', 'min:3', 'max:20', Rule::unique('users', 'name')->ignore($user->id)],
         'email' => ['required', 'email', Rule::unique('users', 'email')->ignore($user->id)],
         'password' => ['nullable', 'min:6', 'max:20'],
@@ -316,13 +316,12 @@ public function updateUser(Request $request, $id)
     ]);
 
     // Update the user details
-    $user->name = $incomingFields['name'];
-    $user->email = $incomingFields['email'];
-    if (isset($incomingFields['password'])) {
-        $user->password = bcrypt($incomingFields['password']);
-    }
-    $user->role_id = $incomingFields['role_id'];
-    $user->save();
+    $user->update([
+        'name' => $validatedData['name'],
+        'email' => $validatedData['email'],
+        'password' => isset($validatedData['password']) ? bcrypt($validatedData['password']) : $user->password,
+        'role_id' => $validatedData['role_id'],
+    ]);
 
     // Return a success response with the updated user's details
     return response()->json($user, 200);
